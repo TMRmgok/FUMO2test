@@ -30,15 +30,15 @@ def about(request):
 def create(request):
     #print('Ответ:')
     req = request.POST
-    #print(req)
+    print(req)
     #print(len(req))
     if len(req)==1:
         print('Ответа нет ',len(req))
-    else:
-        if str(2)==str(req['choice']):
-              print('Ответ дан!!! ',req['choice'],'. Это правильно!')
-        else:
-              print('Ответ дан!!! ', req['choice'], '. Это неправильно!')
+    # else:
+    #     if str(2)==str(req['choice']):
+    #           print('Ответ дан!!! ',req['choice'],'. Это правильно!')
+    #     else:
+    #           print('Ответ дан!!! ', req['choice'], '. Это неправильно!')
 
 
     #print('Следующие проверки')
