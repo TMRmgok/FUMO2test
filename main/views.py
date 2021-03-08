@@ -59,7 +59,7 @@ def create(request):
     prOTTT = vopr2.v6
     print('Новый правильный ответ',prOTTT)
 
-    sqlite_file = 'C:/Users/Александр/PycharmProjects/FUMO2test/FUMO2site/db.sqlite3'
+    sqlite_file = '/home/TMRmgok/tmrmgok.pythonanywhere.com/db.sqlite3'
     if os.path.exists(sqlite_file):
         print('File exists')
     else:
