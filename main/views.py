@@ -28,38 +28,64 @@ def about(request):
     return render(request, 'main/contact_form.html')
 
 def create(request):
-    #print('Ответ:')
+    global right_answer, count_right_answer, count_all_answer
+
+# шаг 1.1 Проверяем, есть ли переменная "правильный ответ"
+# шаг 1.2 Проверяем, есть ли переменная "количество правильных ответов"
+
+    if 'right_answer' in globals():
+        print('Есть правильный ответ')
+    else:
+        print('Нет правильного ответа')
+        right_answer=1
+
+    if 'count_right_answer' in globals():
+        print('Есть правильный ответ')
+    else:
+        print('Нет правильного ответа')
+        count_right_answer = 0
+
+    if 'count_all_answer' in globals():
+        print('Первый вопрос по списку')
+    else:
+        print('Уже были вопросы')
+        count_all_answer = -1
+
+    if count_all_answer==10:
+        count_right_answer=0
+        count_all_answer=-1
+
+# шаг 2.1 Получаем запрос от текущей страницы "req"
+# шаг 2.2 Выводим длину запроса в переменную (чтобы отобразить при проверке)
+# шаг 2.3 Сравниваем данный ответ с правильным ответом
+
     req = request.POST
     print(req)
-    #print(len(req))
+    length_post=len(req)
     if len(req)==1:
         print('Ответа нет ',len(req))
-    # else:
-    #     if str(2)==str(req['choice']):
-    #           print('Ответ дан!!! ',req['choice'],'. Это правильно!')
-    #     else:
-    #           print('Ответ дан!!! ', req['choice'], '. Это неправильно!')
+    if len(req)==2:
+        if str(right_answer)==str(req['choice']):
+            print('Ответ дан!!! ',req['choice'],'. Это правильно!')
+            count_right_answer=count_right_answer+1
 
+    count_all_answer=count_all_answer+1
+# шаг 3.1 Подгружаем из базы данных из таблицы Tasks все вопросы
+# шаг 3.2 Выбираем случайный номер вопроса, загружаем строку с данным номером в переменную vopr2
+# шаг 3.3 Считываем значение правильного ответа из строки в переменную right_answer
 
-    #print('Следующие проверки')
-    form = TaskForm
     tasks = Task.objects.all()
-    prO1 = Globvar.objects.get(pk=1)
-    prOtv = prO1.prO
-
-    #print(prOtv)
     vopr = 'Инструментальные стали'
-    num_vopr = random.randint(0,10)
+    num_vopr = random.randint(0,10)-1
     vopr2 = tasks[num_vopr]
-    v1 = vopr2.v1
-    o1 = vopr2.v2
-    o2 = vopr2.v3
-    o3 = vopr2.v4
-    o4 = vopr2.v5
-    prOTTT = vopr2.v6
-    print('Новый правильный ответ',prOTTT)
+    right_answer = vopr2.v6
+    print('Новый правильный ответ -', right_answer)
+    test_info={'length_post':length_post,'count_right_answer':count_right_answer,'count_all_answer':count_all_answer}
 
+
+#шаг 4. Проверки на внесение данных в базу
     sqlite_file = '/home/TMRmgok/tmrmgok.pythonanywhere.com/db.sqlite3'
+    #'C:/Users/Александр/PycharmProjects/FUMO2test/FUMO2site/db.sqlite3'
     if os.path.exists(sqlite_file):
         print('File exists')
     else:
@@ -68,8 +94,7 @@ def create(request):
 
     conn = sqlite3.connect(sqlite_file)
     cur = conn.cursor()
-    request1="UPDATE main_globvar SET prO = '"+str(prOTTT)+"' WHERE id = 1"
-    #print(request1)
+    request1="UPDATE main_globvar SET prO = '"+str(right_answer)+"' WHERE id = 1"
     cur.execute(request1)
     cur.execute("SELECT * FROM main_globvar")
 
@@ -78,9 +103,7 @@ def create(request):
     results3 = results2[1]
     print('Новый вопрос - ', num_vopr)
     print('Новый правильный ответ - ',results3)
-    #i=prO
-    #print('Правильный ответ - ',i)
-    return render(request, 'main/index.html', {'title':vopr, 'vopr': vopr2})
+    return render(request, 'main/index.html', {'title':vopr, 'vopr': vopr2, 'test_info':test_info})
 
 def hello(request):
     return HttpResponse("Hello world")

@@ -26,6 +26,21 @@
 
     <form method="post">
         {%csrf_token%}
+        <h1>Длина предыдущего массива POST:
+        {% block lenght_post %}
+        {{test_info.length_post}}
+        {% endblock %}</h1>
+
+        <h1>Количество данных ответо:
+        {% block count_all_answer %}
+        {{test_info.count_all_answer}}
+        {% endblock %}</h1>
+
+        <h1>Количество правильных ответов:
+        {% block count_right_answer %}
+        {{test_info.count_right_answer}}
+        {% endblock %}</h1>
+
         <h1>Форма ввода вопроса</h1>
         <!-- В форме должен быть action, вызывающий отправку запроса на бэкенд -->
 
